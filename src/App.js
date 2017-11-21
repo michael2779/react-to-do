@@ -7,9 +7,9 @@ class App extends Component {
     super(props);
     this.state = {
       todos: [
-        { description: 'Walk the cat', isCompleted: true },
-        { description: 'Throw the dishes away', isCompleted: true },
-        { description: 'Buy new dishes', isCompleted: false }
+        { description: 'Walk the cat', isCompleted: true, toRemove: false },
+        { description: 'Throw the dishes away', isCompleted: true, toRemove: false },
+        { description: 'Buy new dishes', isCompleted: false, toRemove:false }
       ],
       newTodoDescription: ''
     };
@@ -22,18 +22,23 @@ class App extends Component {
   toggleComplete(index) {
     const todos = this.state.todos.slice();
     const todo = todos[index];
+    console.log(todo);
     todo.isCompleted = todo.isCompleted ? false : true;
     this.setState({ todos: todos });
   }
 
   pleaseDelete(index) {
-    console.log("hi");
+    const todos = this.state.todos.slice();
+    const todo = todos[index];
+    todo.toRemove = todo.toRemove ? false : true;
+    const todo2 = todos.filter(yes_remove => yes_remove.toRemove === false);
+    this.setState({ todos: todo2 });
   }
 
   handleSubmit(e) {
      e.preventDefault();
      if (!this.state.newTodoDescription) {return}
-     const newTodo = { description: this.state.newTodoDescription, isCompleted: false };
+     const newTodo = { description: this.state.newTodoDescription, isCompleted: false, toRemove: false };
      this.setState({ todos: [...this.state.todos, newTodo ], newTodoDescription: ''});
    }
 
@@ -42,7 +47,7 @@ class App extends Component {
       <div className="App">
         <ul>
           { this.state.todos.map( (todo, index) =>
-            <ToDo key={ index } description={ todo.description } isCompleted={ todo.isCompleted } toggleComplete={ () => this.toggleComplete(index)} pleaseDelete={ () => this.pleaseDelete(index)} />
+            <ToDo key={ index } description={ todo.description } isCompleted={ todo.isCompleted } toggleComplete={ () => this.toggleComplete(index)} toRemove={ todo.toRemove } pleaseDelete={ () => this.pleaseDelete(index)} />
           )}
         </ul>
 
